@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>cooki.gg</title>
+<meta name="description" content="cooki.gg — Telegram and Roblox profile links.">
+<meta name="theme-color" content="#050505">
+
+<meta property="og:title" content="cooki.gg">
+<meta property="og:description" content="Telegram and Roblox — all in one place.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="cooki.gg">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%23050505'/%3E%3Cellipse cx='16' cy='19' rx='7' ry='8' fill='%23111'/%3E%3Cpath d='M16 13 L14 17 L16 16 L18 17 Z' fill='%23c81e3a'/%3E%3C/svg%3E">
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+  :root{
+    --bg-raise: rgba(18,19,25,0.3);
+    --line: rgba(255,255,255,0.14);
+    --text: #d9202f;
+    --dim: #8f1c28;
+    --red: #c81e3a;
+    --amber: #ffc36b;
+  }
+
+  *{ box-sizing: border-box; margin:0; padding:0; }
+
+  html,body{
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    min-height: 100vh;
+    overflow: hidden;
+    background: #050505;
+  }
+
+  body{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: max(32px, env(safe-area-inset-top)) 18px max(32px, env(safe-area-inset-bottom));
+    position: relative;
+  }
+
+  .scene{
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse at 50% 30%, #14120f 0%, #050505 65%);
+    overflow: hidden;
+  }
+
+  .grain{
+    position: absolute;
+    inset: 0;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  #spiderCanvas{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+  }
+
+  .card{
+    position:relative;
+    z-index: 1;
+    width:100%;
+    max-width: 420px;
+    background: var(--bg-raise);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 34px 26px 28px;
+    box-shadow: 0 20px 70px rgba(0,0,0,0.6);
+    animation: rise .7s cubic-bezier(.16,1,.3,1) both;
+  }
+
+  @keyframes rise{
+    from{ opacity:0; transform: translateY(14px); }
+    to{ opacity:1; transform: translateY(0); }
+  }
+
+  .status-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom: 22px;
+  }
+
+  .status-row .dot{ margin-right: -2px; }
+
+  .brand-mark{
+    margin-left: auto;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    letter-spacing: .05em;
+    color: var(--red);
+    opacity: 0.8;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.7);
+  }
+
+  .dot{
+    width:7px; height:7px;
+    border-radius:50%;
+    background: var(--red);
+    box-shadow: 0 0 8px var(--red);
+    animation: blink 1.8s ease-in-out infinite;
+  }
+
+  @keyframes blink{
+    0%,100%{ opacity:1; }
+    50%{ opacity:.35; }
+  }
+
+  .status-row span{
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--dim);
+    text-shadow: 0 1px 4px rgba(0,0,0,0.7);
+  }
+
+  .tag{
+    font-size: 9px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--red);
+    font-family: 'Press Start 2P', monospace;
+    display:block;
+    margin-bottom: 10px;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.7);
+  }
+
+  h1{
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(20px, 6vw, 26px);
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+    color: var(--text);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8), 0 0 20px rgba(200,30,58,0.45);
+    word-break: break-word;
+  }
+
+  .divider{
+    height:1px;
+    background: linear-gradient(90deg, transparent, var(--line), transparent);
+    margin: 26px 0 22px;
+  }
+
+  .links{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+
+  .link{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding: 14px 16px;
+    background: rgba(10,10,12,0.32);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    text-decoration:none;
+    color: var(--text);
+    transition: border-color .2s ease, transform .2s ease, background .2s ease;
+    opacity: 0;
+    animation: rise .6s cubic-bezier(.16,1,.3,1) both;
+  }
+
+  .link:nth-child(1){ animation-delay: .12s; }
+  .link:nth-child(2){ animation-delay: .2s; }
+
+  .link:active{
+    transform: scale(0.98);
+  }
+
+  .link:focus-visible,
+  .copy-btn:focus-visible{
+    outline: 2px solid var(--red);
+    outline-offset: 2px;
+  }
+
+  @media (hover:hover){
+    .link:hover{
+      border-color: var(--red);
+      background: rgba(10,10,12,0.55);
+    }
+    .link:hover .icon{
+      color: var(--red);
+    }
+  }
+
+  .icon{
+    width: 20px;
+    height: 20px;
+    flex-shrink:0;
+    color: var(--dim);
+    transition: color .2s ease;
+  }
+  .icon svg{ width:100%; height:100%; }
+
+  .link-body{ flex:1; min-width:0; }
+
+  .link-label{
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 2px;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.7);
+  }
+
+  .link-value{
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    text-shadow: 0 1px 4px rgba(0,0,0,0.7);
+  }
+
+  .copy-btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width: 30px;
+    height: 30px;
+    flex-shrink:0;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: var(--dim);
+    cursor: pointer;
+    transition: background .15s ease, color .15s ease;
+  }
+  .copy-btn:active{ transform: scale(0.92); }
+  @media (hover:hover){
+    .copy-btn:hover{ background: rgba(255,255,255,0.08); color: var(--red); }
+  }
+  .copy-btn svg{ width: 16px; height: 16px; }
+
+  footer{
+    margin-top: 26px;
+    text-align:center;
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--dim);
+    text-shadow: 0 1px 4px rgba(0,0,0,0.7);
+  }
+
+  .toast{
+    position: fixed;
+    left: 50%;
+    bottom: 28px;
+    transform: translate(-50%, 12px);
+    background: #14151b;
+    border: 1px solid var(--line);
+    color: var(--text);
+    font-size: 12px;
+    letter-spacing: .04em;
+    padding: 10px 16px;
+    border-radius: 10px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s ease, transform .25s ease;
+    z-index: 5;
+  }
+  .toast.show{
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .card, .link{ animation: none; opacity: 1; }
+    .dot{ animation:none; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="scene" aria-hidden="true">
+    <div class="grain"></div>
+    <canvas id="spiderCanvas" aria-hidden="true"></canvas>
+  </div>
+
+  <main class="card">
+    <div class="status-row">
+      <div class="dot"></div>
+      <span>online now</span>
+      <span class="brand-mark">cooki</span>
+    </div>
+
+    <span class="tag">profile card</span>
+    <h1>cooki.gg</h1>
+
+    <div class="divider"></div>
+
+    <nav class="links" aria-label="Profile links">
+
+      <a class="link" href="https://t.me/fuckof1q" target="_blank" rel="noopener" aria-label="Open Telegram profile, fuckof1q">
+        <span class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 4L3 11.5l6 2.3M21 4l-3.5 16-7.5-6.2M21 4L9.5 13.8"/></svg>
+        </span>
+        <div class="link-body">
+          <div class="link-label">Telegram</div>
+          <div class="link-value">fuckof1q</div>
+        </div>
+        <button class="copy-btn" type="button" data-value="fuckof1q" aria-label="Copy Telegram username">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+        </button>
+      </a>
+
+      <a class="link" href="https://www.roblox.com/users/profile?username=Lox228chypiks" target="_blank" rel="noopener" aria-label="Open Roblox profile, Lox228chypiks">
+        <span class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="4" width="16" height="16" rx="2" transform="rotate(15 12 12)"/></svg>
+        </span>
+        <div class="link-body">
+          <div class="link-label">Roblox</div>
+          <div class="link-value">Lox228chypiks</div>
+        </div>
+        <button class="copy-btn" type="button" data-value="Lox228chypiks" aria-label="Copy Roblox username">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+        </button>
+      </a>
+
+    </nav>
+
+    <footer>cooki.gg</footer>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  const toast = document.getElementById('toast');
+  let toastTimer;
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 1600);
+  }
+
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const value = btn.dataset.value;
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(value).then(() => showToast('Copied "' + value + '"'));
+      } else {
+        showToast(value);
+      }
+    });
+  });
+
+  const spiderCanvas = document.getElementById('spiderCanvas');
+  const sctx = spiderCanvas.getContext('2d');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const RES_W = 140;
+  let RES_H = 90;
+
+  const webBuffer = document.createElement('canvas');
+  const wctx = webBuffer.getContext('2d');
+
+  function plotPixelLine(ctx, x0, y0, x1, y1){
+    x0 = Math.round(x0); y0 = Math.round(y0);
+    x1 = Math.round(x1); y1 = Math.round(y1);
+    let dx = Math.abs(x1 - x0), dy = Math.abs(y1 - y0);
+    let sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1;
+    let err = dx - dy;
+    while(true){
+      ctx.fillRect(x0, y0, 1, 1);
+      if(x0 === x1 && y0 === y1) break;
+      const e2 = 2 * err;
+      if(e2 > -dy){ err -= dy; x0 += sx; }
+      if(e2 < dx){ err += dx; y0 += sy; }
+    }
+  }
+
+  function drawWeb(){
+    const hubX = RES_W * 0.85, hubY = RES_H * 0.14;
+    const R = Math.sqrt(RES_W*RES_W + RES_H*RES_H) * 0.85;
+    const N_SPOKES = 18;
+    const angles = [];
+    for(let i=0;i<N_SPOKES;i++) angles.push(2*Math.PI*i/N_SPOKES);
+
+    wctx.clearRect(0, 0, RES_W, RES_H);
+
+    const grad = wctx.createRadialGradient(hubX, hubY, 0, hubX, hubY, R*0.6);
+    grad.addColorStop(0, 'rgba(255,255,255,0.16)');
+    grad.addColorStop(0.55, 'rgba(255,255,255,0.04)');
+    grad.addColorStop(1, 'rgba(255,255,255,0)');
+    wctx.fillStyle = grad;
+    wctx.fillRect(0, 0, RES_W, RES_H);
+
+    wctx.fillStyle = 'rgba(255,255,255,0.4)';
+    plotPixelLine(wctx, hubX, hubY, hubX, 0);
+    plotPixelLine(wctx, hubX, hubY, RES_W, hubY);
+    plotPixelLine(wctx, hubX, hubY, RES_W, 0);
+
+    wctx.fillStyle = 'rgba(255,255,255,0.6)';
+    angles.forEach(a => {
+      plotPixelLine(wctx, hubX, hubY, hubX + R*Math.cos(a), hubY + R*Math.sin(a));
+    });
+
+    const ringFracs = [0.1, 0.2, 0.32, 0.45, 0.58, 0.71, 0.84, 0.96];
+    wctx.fillStyle = 'rgba(255,255,255,0.42)';
+    ringFracs.forEach(rf => {
+      const r = rf * R;
+      let prev = null;
+      const loopAngles = angles.concat([angles[0]]);
+      loopAngles.forEach(a => {
+        const x = hubX + r*Math.cos(a), y = hubY + r*Math.sin(a);
+        if(prev) plotPixelLine(wctx, prev[0], prev[1], x, y);
+        prev = [x, y];
+      });
+    });
+
+    wctx.fillStyle = 'rgba(255,255,255,0.55)';
+    wctx.fillRect(Math.round(hubX)-1, Math.round(hubY)-1, 2, 2);
+  }
+
+  function resizeSpiderCanvas(){
+    const vw = window.innerWidth, vh = window.innerHeight;
+    RES_H = Math.round(RES_W * (vh / vw));
+    spiderCanvas.width = RES_W;
+    spiderCanvas.height = RES_H;
+    webBuffer.width = RES_W;
+    webBuffer.height = RES_H;
+    drawWeb();
+    if(reduceMotion){
+      sctx.clearRect(0, 0, RES_W, RES_H);
+      sctx.drawImage(webBuffer, 0, 0);
+    }
+  }
+  window.addEventListener('resize', resizeSpiderCanvas);
+  resizeSpiderCanvas();
+
+  const BODY = [
+    ".......................",
+    ".......................",
+    ".......................",
+    "...B...B.......B...B...",
+    "...B...B.BBBBB.B...B...",
+    "..B...B.BRRRRRB.B...B..",
+    "..B..B..BBRRRBB..B..B..",
+    ".B...B..BBBRBBB..B...B.",
+    "..B...B.BBRRRBB.B...B..",
+    "...BB..BBRRRRRBB..BB...",
+    ".....B..BBBBBBB..B.....",
+    "......BBBBBBBBBBB......",
+    ".......B.BBBBB.B.......",
+    "......B.BBBBBBB.B......",
+    "....BB.BBBBBBBBB.BB....",
+    "...B...B.BBBBB.B...B...",
+    "..B...B..BBBBB..B...B..",
+    "..B...B...B.B...B...B..",
+    "..B..B...........B..B..",
+    "..B..B...........B..B..",
+    "..B...B.........B...B..",
+    "..B....B.......B....B..",
+    ".......................",
+    "......................."
+  ];
+  const BODY_COLORS = { 'B': '#0a0a0a', 'R': '#bf360c' };
+  const CELL = 2.5;
+  const GRID_W = BODY[0].length;
+  const GRID_H = BODY.length;
+
+  // each of the 8 legs, as its own connected pixel group with a per-pixel
+  // weight (0 at the body attachment, 1 at the outermost tip)
+  const LEGS = [
+    {"cells":[[3,3,1],[4,3,0.833],[5,2,0.687],[6,2,0.527],[7,1,0.471],[8,2,0.236],[9,3,0.0],[9,4,0.167]]},
+    {"cells":[[3,7,1],[4,7,0.838],[5,8,0.658],[6,8,0.493],[7,8,0.329],[8,8,0.164],[9,8,0.0],[9,7,0.164],[8,6,0.368],[7,5,0.593],[6,5,0.697],[5,6,0.735]]},
+    {"cells":[[3,15,1],[4,15,0.833],[5,16,0.687],[6,17,0.601],[7,17,0.471],[8,16,0.236],[9,15,0.0],[9,14,0.167],[8,14,0.236],[7,14,0.373],[6,14,0.527],[5,14,0.687]]},
+    {"cells":[[3,19,1],[4,19,0.833],[5,20,0.687],[6,20,0.527],[7,21,0.471],[8,20,0.236],[9,19,0.0],[9,18,0.167]]},
+    {"cells":[[14,4,0.0],[15,3,0.194],[16,2,0.389],[17,2,0.495],[18,2,0.614],[19,2,0.74],[20,2,0.869],[21,2,1],[14,5,0.137]]},
+    {"cells":[[14,7,0.0],[15,7,0.124],[16,6,0.277],[17,6,0.392],[18,5,0.555],[19,5,0.668],[20,6,0.754],[21,7,0.868],[22,8,1],[14,8,0.124]]},
+    {"cells":[[14,14,0.0],[15,15,0.177],[16,16,0.354],[17,16,0.451],[18,17,0.625],[19,17,0.729],[20,16,0.791],[21,15,0.884],[22,14,1],[14,15,0.125]]},
+    {"cells":[[14,17,0.0],[14,18,0.131],[15,19,0.294],[16,20,0.473],[17,20,0.557],[18,20,0.657],[19,20,0.766],[20,20,0.881],[21,20,1]]}
+  ];
+
+  // each leg gets its own distinct timing offset around the step cycle —
+  // a full 8-point stagger (a rippling wave gait) instead of 2 rigid
+  // groups, so no two legs — front or back — ever move in lockstep
+  const PHASE_OFFSET = [0, 0.25, 0.5, 0.75, 0.125, 0.375, 0.625, 0.875];
+
+  // derive each leg's own attach->tip direction so it swings along its
+  // natural angle instead of a generic horizontal shift
+  LEGS.forEach(leg => {
+    let attach = leg.cells[0], tip = leg.cells[0];
+    leg.cells.forEach(cell => {
+      if(cell[2] < attach[2]) attach = cell;
+      if(cell[2] > tip[2]) tip = cell;
+    });
+    const dr = tip[0]-attach[0], dc = tip[1]-attach[1];
+    const len = Math.hypot(dr, dc) || 1;
+    leg.dirR = dr/len;
+    leg.dirC = dc/len;
+  });
+
+  const LEG_PIXELS = new Set();
+  LEGS.forEach(leg => leg.cells.forEach(([r,c]) => LEG_PIXELS.add(r+','+c)));
+
+  const MAX_REACH = 3;        // grid units of stride half-length
+  const STANCE_DIST = 2 * MAX_REACH * CELL; // canvas-px of body travel per planted drag —
+                                             // sized so the ramp exactly cancels body motion
+  const SWING_DIST = STANCE_DIST * 0.4;     // quick snap-forward, shorter than the drag
+  const TOTAL_DIST = STANCE_DIST + SWING_DIST;
+  const LIFT_MAX = 1.1;        // small perpendicular arc while a leg is mid-swing
+
+  LEGS.forEach(leg => {
+    // front legs (dirR<0) must ramp the opposite way from back legs (dirR>0)
+    // to cancel the same forward body motion — see derivation in comments below
+    leg.rampSign = leg.dirR < 0 ? 1 : -1;
+    leg.perpR = -leg.dirC;
+    leg.perpC = leg.dirR;
+  });
+
+  function legOffset(leg, phaseOffset, distanceTraveled){
+    const offsetDist = phaseOffset * TOTAL_DIST;
+    const local = ((distanceTraveled + offsetDist) % TOTAL_DIST + TOTAL_DIST) % TOTAL_DIST;
+    let reach, lift = 0;
+    if(local < STANCE_DIST){
+      // planted: local offset ramps linearly so it exactly cancels the
+      // body's own forward travel — the tip stays put on screen
+      reach = leg.rampSign * (-MAX_REACH + (local / STANCE_DIST) * 2 * MAX_REACH);
+    } else {
+      // swing: quick snap back to the starting plant position, with a
+      // small lift arc so it visibly leaves the ground mid-reposition
+      const s = (local - STANCE_DIST) / SWING_DIST;
+      reach = leg.rampSign * (MAX_REACH - s * 2 * MAX_REACH);
+      lift = Math.sin(s * Math.PI) * LIFT_MAX;
+    }
+    return { reach, lift };
+  }
+
+  function drawSpider(centerX, centerY, angle, distanceTraveled){
+    sctx.save();
+    sctx.translate(centerX, centerY);
+    sctx.rotate(angle);
+
+    // static body/head — everything that isn't part of an animated leg
+    for(let r=0;r<GRID_H;r++){
+      const row = BODY[r];
+      for(let c=0;c<row.length;c++){
+        const ch = row[c];
+        if(ch === '.' || LEG_PIXELS.has(r+','+c)) continue;
+        sctx.fillStyle = BODY_COLORS[ch];
+        sctx.fillRect(
+          Math.round((c - GRID_W/2) * CELL),
+          Math.round((r - GRID_H/2) * CELL),
+          Math.ceil(CELL), Math.ceil(CELL)
+        );
+      }
+    }
+
+    // each leg: planted (screen-fixed tip) while its group is in stance,
+    // then a quick lifted snap forward to plant again — real walking
+    // kinematics rather than a sine sway
+    sctx.fillStyle = BODY_COLORS['B'];
+    LEGS.forEach((leg, i) => {
+      const { reach, lift } = legOffset(leg, PHASE_OFFSET[i], distanceTraveled);
+      leg.cells.forEach(([r,c,w]) => {
+        const drawRow = r + leg.dirR*reach*w + leg.perpR*lift*w;
+        const drawCol = c + leg.dirC*reach*w + leg.perpC*lift*w;
+        sctx.fillRect(
+          Math.round((drawCol - GRID_W/2) * CELL),
+          Math.round((drawRow - GRID_H/2) * CELL),
+          Math.ceil(CELL), Math.ceil(CELL)
+        );
+      });
+    });
+
+    sctx.restore();
+  }
+
+  const SPIDER_W = GRID_W * CELL;
+  const SPIDER_H = GRID_H * CELL;
+
+  let active = false;
+  let startTime = 0;
+  let duration = 9000;
+  let fromX = 0, toX = 0, y = 0, movingRight = true;
+  let rafId = null;
+
+  function frame(now){
+    sctx.clearRect(0, 0, RES_W, RES_H);
+    sctx.drawImage(webBuffer, 0, 0);
+    if(active){
+      const elapsed = now - startTime;
+      const p = Math.min(1, elapsed / duration);
+      const x = fromX + (toX - fromX) * p;
+      const distanceTraveled = Math.abs(x - fromX);
+      const facing = movingRight ? -Math.PI/2 : Math.PI/2; // rotate front to face travel direction
+      drawSpider(x, y, facing, distanceTraveled);
+      if(p >= 1){
+        active = false;
+        scheduleNext();
+      }
+    }
+    rafId = requestAnimationFrame(frame);
+  }
+
+  function triggerCrawl(){
+    if(reduceMotion) return;
+    movingRight = Math.random() < 0.5;
+    y = SPIDER_H + Math.random() * (RES_H * 0.35);
+    duration = 8000 + Math.random() * 6000;
+    if(movingRight){
+      fromX = -SPIDER_W;
+      toX = RES_W + SPIDER_W;
+    } else {
+      fromX = RES_W + SPIDER_W;
+      toX = -SPIDER_W;
+    }
+    startTime = performance.now();
+    active = true;
+  }
+
+  function scheduleNext(){
+    const delay = 2000 + Math.random() * 5000; // 2–7s between crawls
+    setTimeout(triggerCrawl, 
+function scheduleNext() {
+  const delay = 2000 + Math.random() * 5000; // 2–7s between crawls
+  setTimeout(triggerCrawl, delay);
+}
+
+scheduleNext();
+rafId = requestAnimationFrame(frame);
+
+})();
+</script>
+</body>
+</html>
