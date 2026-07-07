@@ -627,19 +627,16 @@
     }
     startTime = performance.now();
     active = true;
-  }
+  
 
   function scheduleNext(){
     const delay = 2000 + Math.random() * 5000; // 2–7s between crawls
-    setTimeout(triggerCrawl, 
-function scheduleNext() {
-  const delay = 2000 + Math.random() * 5000; // 2–7s between crawls
-  setTimeout(triggerCrawl, delay);
-}
-
-scheduleNext();
-rafId = requestAnimationFrame(frame);
-
+    setTimeout(triggerCrawl,}
+   
+    if(!reduceMotion){
+    rafId = requestAnimationFrame(frame);
+    scheduleNext();
+  }
 })();
 </script>
 </body>
